@@ -3,16 +3,10 @@ import math
 
 def make_query(colors,query):
     idx = colors.index(query)
-    del colors[idx]
-    colors.insert(0,query)
+    colors[1:idx+1] = colors[0:idx]
+    colors[0] =query
     return colors,idx+1
-    '''
-    for idx,number in enumerate(colors):
-        if number ==query:
-            del colors[idx]
-            colors.insert(0,number)
-            return colors,idx+1
-    '''
+
 def solve():
     #n = int(input()) # number of reviewers
     types = list(map(int,input().split()))
