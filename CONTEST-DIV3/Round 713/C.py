@@ -1,80 +1,83 @@
+def reduce_text(a,b,texto):
+    n = len(texto)
+    new_texto = list('?'*n)
+    middle = n//2
+    cnt = 0
+    for i in range(middle):
+        if texto[i] == texto [n-1-i]:
+            if texto[i]!='?':
+                new_texto[i]=texto[i]
+                new_texto[n-1-i]=texto[i]
+                if texto[i]=='1':
+                    b-=2
+                else:
+                    a-=2
+            else:
+                cnt+=2
+        else:
+            e =texto[i]+texto [n-1-i] 
+            if e in ['01','10']:
+                return -1,-1,-1,''
+            elif e in ['?1','1?']:
+                b-=2
+                new_texto[i]='1'
+                new_texto[n-1-i]='1'
+            else:
+                a-=2
+                new_texto[i]='0'
+                new_texto[n-1-i]='0'
+
+
+    if n%2 ==1:
+        pos = n//2
+        middle = texto[pos]
+        if middle =='?':            
+            new_char = None
+            if a%2 ==1:
+                new_char = '0'
+                a-=1
+            if b%2 ==1 :
+                new_char = '1'
+                b-=1
+            new_texto[pos]=new_char
+
+        elif middle =='1':
+            b-=1
+            new_texto[pos]='1'
+        else:
+            a-=1
+            new_texto[pos]='0'
+    return a,b,cnt,new_texto
+
+
 t = int(input())
 
+
 for i in range(t):
-    ga = input()
-    [a,b] = list(map(int,ga.split(' ')))
-    #print(a,b)
-    s = list(map(str,input()))
-    s_size = len(s)
-    #if len(s)==0:
-    #    print(-1)
-    #    continue
-    #print(s_size)
 
-    if a==0 or b ==0:
-        if (a+b)!=s_size:
-            print(-1) 
-            continue
-    elif a%2!=0 and b%2!=0:
-        print(-1)
-        continue
-    elif (a+b)!=s_size:
-        print(-1) 
-        continue
-    cnt = {'0':0,'1':0,'?':0}
+    [a,b] = list(map(int,input().split(' ')))
+    texto = input()
 
-    for element in s:
-        cnt[element]+=1
-    #'''
-    if cnt['0']>a:
+    a,b,cnt,texto = reduce_text(a,b,texto)
+    #print(a,b,texto)
+    if texto=='':
         print(-1)
-        continue
-    if cnt['1']>b:
-        print(-1)
-        continue
-    #'''
-    if b==0:
-        for idx in range(s_size):
-            if s[idx]=='1':
-                s='-1'
-                break
-            else:
-                s[idx]='0'
-    elif a==0:
-        for idx in range(s_size):
-            if s[idx]=='0':
-                s='-1'
-                break
-            else:
-                s[idx]='1'
     else:
-        for idx in range(s_size//2):
-            if s[idx]!=s[s_size-idx-1]:
-                if s[idx] in ['0','1'] and s[s_size-idx-1] in ['0','1'] :
-                    s='-1'
-                    break
-                elif s[idx]=='?':
-                    s[idx]=s[s_size-idx-1]
+        n = len(texto)
+        middle = n//2
+
+        for i in range(middle):
+            if texto[i] == '?':
+                if a>0:
+                    texto[i] = '0'
+                    texto [n-1-i] = '0'
+                    a-=2
                 else:
-                    s[s_size-idx-1] = s[idx]
-                cnt[s[idx]]+=1
-            else:
-                if s[idx]=='?':
-                    if (cnt['0']+2)<=a:
-                        s[idx]='0'
-                        s[s_size-idx-1]='0'
-                        cnt['0']+=2
-                    elif (cnt['1']+2)<=b:
-                        s[idx]='1'
-                        s[s_size-idx-1]='1'
-                        cnt['1']+=2
-                #else:
-                #    cnt[s[idx]]+=2  
-        #print('tmr',idx)
-        if len(s)>2 and len(s)%2!=0:
-            if s[idx+1] =='?':
-                if cnt['0']<a:
-                    s[idx+1]='0'
-                else:
-                    s[idx+1]='1'
-    print(''.join(s))
+                    texto[i] = '1'
+                    texto [n-1-i] = '1'
+                    b-=2
+        #print(a,b,texto)
+        if a==0 and b==0:
+            print(''.join(texto))
+        else:
+            print(-1)
